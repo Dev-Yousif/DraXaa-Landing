@@ -118,6 +118,15 @@ const Header = () => {
                 {t('contact')}
               </Link>
             </li>
+            
+            {/* Language Switcher - Mobile Only */}
+            <li className="nav-item lg:hidden">
+              <div className="px-3 py-2">
+                <div className="text-xs font-medium text-gray-500 mb-2">{t('language') || 'Language'}</div>
+                <LanguageSwitcher isMobile={true} />
+              </div>
+            </li>
+            
             <li className="nav-item lg:hidden">
               <Link className="btn btn-primary hidden lg:flex" href="/contact">
                 {t('getStarted')}
@@ -125,8 +134,10 @@ const Header = () => {
             </li>
           </ul>
           <div className="order-1 ml-auto flex items-center md:ml-0 gap-4">
-            {/* Language Switcher */}
-            <LanguageSwitcher />
+            {/* Language Switcher - Desktop Only */}
+            <div className="hidden lg:block">
+              <LanguageSwitcher isMobile={false} />
+            </div>
 
             <Link
               className="btn btn-primary hidden lg:flex"

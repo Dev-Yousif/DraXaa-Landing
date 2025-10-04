@@ -25,6 +25,7 @@ const Home = async ({ params }) => {
   // Build data from translations
   const banner = {
     title: t('heroTitle'),
+    description: t('heroDescription'),
     link: {
       label: t('heroButton'),
       href: '/contact'

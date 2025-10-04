@@ -24,6 +24,12 @@ const HomeBanner = ({ banner: bannerData, brands }) => {
         { y: 0, opacity: 1, duration: 0.5, delay: 0.5 }
       )
         .fromTo(
+          ".banner-description",
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5 },
+          ">-0.3"
+        )
+        .fromTo(
           ".banner-btn",
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.5 },
@@ -158,6 +164,15 @@ const HomeBanner = ({ banner: bannerData, brands }) => {
                     bannerData.title,
                     "h1",
                     "mb-8 banner-title opacity-0"
+                  )}
+                  {bannerData.description && (
+                    <div className="banner-description opacity-0 mb-8">
+                      {markdownify(
+                        bannerData.description,
+                        "p",
+                        "text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
+                      )}
+                    </div>
                   )}
                   <div className="banner-btn opacity-0">
                     <Link
