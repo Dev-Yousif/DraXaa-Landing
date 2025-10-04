@@ -1,14 +1,15 @@
+"use client";
+
 import Logo from "@components/Logo";
+import LanguageSwitcher from "@components/LanguageSwitcher";
 import config from "@config/config.json";
-import menu from "@config/menu.json";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/routing";
 import React, { useEffect, useRef, useState } from "react";
 import { CgClose } from "react-icons/cg";
+import { useTranslations } from 'next-intl';
 
 const Header = () => {
-  // distructuring the main menu from menu object
-  const { main } = menu;
+  const t = useTranslations('Navigation');
 
   // states declaration
   const [showMenu, setShowMenu] = useState(false);
@@ -60,65 +61,79 @@ const Header = () => {
               !showMenu && "hidden"
             }`}
           >
-            {main.map((menu, i) => (
-              <React.Fragment key={`menu-${i}`}>
-                {menu.hasChildren ? (
-                  <li className="nav-item nav-dropdown group relative">
-                    <span className="nav-link inline-flex items-center">
-                      {menu.name}
-                      <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </span>
-                    <ul className="nav-dropdown-list hidden max-h-0 w-full overflow-hidden border border-border-secondary py-0 transition-all duration-500 group-hover:block group-hover:max-h-[106px] group-hover:py-2 lg:invisible lg:absolute lg:left-1/2 lg:block lg:w-auto lg:-translate-x-1/2 lg:group-hover:visible lg:group-hover:opacity-100">
-                      {menu.children.map((child, i) => (
-                        <li className="nav-dropdown-item" key={`children-${i}`}>
-                          <Link
-                            href={child.url}
-                            className={`nav-dropdown-link block transition-all ${
-                              asPath === child.url && "active"
-                            }`}
-                          >
-                            {child.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ) : (
-                  <li className="nav-item">
-                    <Link
-                      href={menu.url}
-                      className={`nav-link block ${
-                        asPath === menu.url && "active"
-                      }`}
-                    >
-                      {menu.name}
-                    </Link>
-                  </li>
-                )}
-              </React.Fragment>
-            ))}
-            {config.nav_button.enable && (
-              <li className="nav-item lg:hidden">
-                <Link
-                  className="btn btn-primary hidden lg:flex"
-                  href={config.nav_button.link}
-                >
-                  {config.nav_button.label}
-                </Link>
-              </li>
-            )}
-          </ul>
-          <div className="order-1 ml-auto flex items-center md:ml-0">
-            {config.nav_button.enable && (
+            <li className="nav-item">
               <Link
-                className="btn btn-primary hidden lg:flex"
-                href={config.nav_button.link}
+                href="/"
+                className={`nav-link block ${asPath === "/" && "active"}`}
               >
-                {config.nav_button.label}
+                {t('home')}
               </Link>
-            )}
+            </li>
+            <li className="nav-item nav-dropdown group relative">
+              <span className="nav-link inline-flex items-center">
+                {t('services')}
+                <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+              <ul className="nav-dropdown-list hidden max-h-0 w-full overflow-hidden border border-border-secondary py-0 transition-all duration-500 group-hover:block group-hover:max-h-[106px] group-hover:py-2 lg:invisible lg:absolute lg:left-1/2 lg:block lg:w-auto lg:-translate-x-1/2 lg:group-hover:visible lg:group-hover:opacity-100">
+                <li className="nav-dropdown-item">
+                  <Link href="/#features" className="nav-dropdown-link block transition-all">
+                    {t('webDevelopment')}
+                  </Link>
+                </li>
+                <li className="nav-dropdown-item">
+                  <Link href="/#features" className="nav-dropdown-link block transition-all">
+                    {t('mobileApps')}
+                  </Link>
+                </li>
+                <li className="nav-dropdown-item">
+                  <Link href="/#features" className="nav-dropdown-link block transition-all">
+                    {t('customSoftware')}
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/about"
+                className={`nav-link block ${asPath === "/about" && "active"}`}
+              >
+                {t('about')}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/posts"
+                className={`nav-link block ${asPath === "/posts" && "active"}`}
+              >
+                {t('blog')}
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                href="/contact"
+                className={`nav-link block ${asPath === "/contact" && "active"}`}
+              >
+                {t('contact')}
+              </Link>
+            </li>
+            <li className="nav-item lg:hidden">
+              <Link className="btn btn-primary hidden lg:flex" href="/contact">
+                {t('getStarted')}
+              </Link>
+            </li>
+          </ul>
+          <div className="order-1 ml-auto flex items-center md:ml-0 gap-4">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
+            <Link
+              className="btn btn-primary hidden lg:flex"
+              href="/contact"
+            >
+              {t('getStarted')}
+            </Link>
 
             {/* navbar toggler */}
             {showMenu ? (

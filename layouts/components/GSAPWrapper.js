@@ -1,7 +1,7 @@
 "use client";
 
 import { gsap } from "@lib/gsap";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/routing";
 import { useEffect, useRef } from "react";
 
 const GSAPWrapper = ({ children }) => {

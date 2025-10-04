@@ -21,7 +21,9 @@
       "primary": "Poppins:wght@400;500;600;700",
       "primary_type": "sans-serif",
       "secondary": "",
-      "secondary_type": ""
+      "secondary_type": "",
+      "arabic_primary": "Cairo:wght@400;600;700;900",
+      "arabic_secondary": "Tajawal:wght@300;400;500;700"
     },
     "font_size": {
       "base": "16",

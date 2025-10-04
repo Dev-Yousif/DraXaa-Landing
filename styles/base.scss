@@ -44,3 +44,24 @@ h6,
 .h6 {
   @apply text-h6;
 }
+
+// Arabic fonts
+html[lang="ar"] {
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  body,
+  p,
+  span,
+  div,
+  a,
+  li,
+  label,
+  input,
+  textarea,
+  button {
+    font-family: 'Tajawal', sans-serif;
+  }
+}

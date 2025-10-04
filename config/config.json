@@ -2,7 +2,7 @@
   "site": {
     "title": "Draxaa - Web & Mobile App Development Company",
     "base_url": "/",
-    "favicon": "/images/favicon.png",
+    "favicon": "/images/favicon.ico",
     "logo": "/images/logo.svg",
     "logo_width": "270",
     "logo_height": "55",
