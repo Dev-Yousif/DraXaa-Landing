@@ -6,43 +6,43 @@ draft: false
 ## about us
 about_us:
   subtitle: WHO WE ARE
-  title: Hello, We’re Andromeda Here For Your Help
-  content: Your online Health & Fitness companion that offers free assistance on its Facebook Group and provides quality paid guided personal training packages by and through website. We are the first ever, online manifesto in Bangladesh to make place you will select when you think of getting fit
+  title: We're Draxaa - Your Trusted Technology Partner
+  content: Draxaa is a full-service software development company specializing in web design, mobile app development, and custom enterprise solutions. With a team of experienced developers, designers, and strategists, we transform innovative ideas into powerful digital products that drive business growth. Our mission is to empower businesses of all sizes with cutting-edge technology solutions that are scalable, secure, and built to last.
   image: /images/about/01.jpg
 
 ## our works
 works:
-  subtitle: OUR WORKS
-  title: What We Do
+  subtitle: OUR EXPERTISE
+  title: What We Do Best
   list:
-    - title: Building A New Class
-      content: Decade of engineering under his belt, Jeremie is responsible for technical infrastructure and feature development. In Flow, wherever things just work is understanding developing complex systems
-    - title: Design For Anyone
-      content: Decade of engineering under his belt, Jeremie is responsible for technical infrastructure and feature development. In Flow, wherever things just work is understanding developing complex systems
-    - title: Creative Flair Design
-      content: Decade of engineering under his belt, Jeremie is responsible for technical infrastructure and feature development. In Flow, wherever things just work is understanding developing complex systems
-    - title: Building Products
-      content: Decade of engineering under his belt, Jeremie is responsible for technical infrastructure and feature development. In Flow, wherever things just work is understanding developing complex systems
+    - title: Web Application Development
+      content: We build modern, responsive web applications using the latest frameworks like React, Next.js, and Node.js. From progressive web apps to complex enterprise platforms, our solutions are fast, secure, and optimized for conversions.
+    - title: Mobile App Development
+      content: Native iOS and Android apps or cross-platform solutions with React Native and Flutter. We create mobile experiences that users love, with seamless performance, intuitive interfaces, and robust backend integration.
+    - title: UI/UX Design Excellence
+      content: Our design team crafts beautiful, user-centered interfaces that combine aesthetics with functionality. We conduct user research, create wireframes, and iterate on designs to ensure optimal user experience and engagement.
+    - title: Custom Software Solutions
+      content: Enterprise software, SaaS platforms, and API integrations tailored to your specific business needs. We architect scalable solutions with clean code, comprehensive documentation, and ongoing support to ensure long-term success.
 
 ## our mission
 mission:
   subtitle: OUR MISSION
-  title: Main Vision And Mission Of Our Company
-  content: We were freelance designers and developers, constantly finding ourselve deep vague feedback. leaving a notes from the sticky note piece .
+  title: Empowering Businesses Through Technology Innovation
+  content: At Draxaa, our mission is to bridge the gap between business challenges and technological solutions. We believe in transparent communication, agile methodologies, and delivering exceptional results that exceed expectations. Every project we undertake is an opportunity to create lasting value for our clients and their customers.
   image: /images/about/02.jpg
 
 ## short video
 video:
-  subtitle: A SHORT VIDEO
-  title: You Take Care Of The Payments, We Take Care Of The Rest.
-  description: Protect your design vision and leave nothing up to interpretation with interaction recipes. Quickly share and access all your team members interactions by using libraries, ensuring consistcy throughout the.
+  subtitle: SEE OUR PROCESS
+  title: We Handle The Technical Complexity, You Focus On Growing Your Business
+  description: Our streamlined development process ensures transparency at every stage. From initial consultation and wireframing to development, testing, and deployment, we keep you informed and involved. Watch how we transform ideas into production-ready applications.
   video_id: dyZcRRWiuuw
   thumbnail: /images/about/video-popup-2.jpg
 
 ## clients
 clients:
   subtitle: OUR CLIENTS
-  title: Trusted By Thousands Companies
+  title: Trusted By Leading Companies Worldwide
   brands:
     - /images/brands/01-colored.png
     - /images/brands/02-colored.png
@@ -57,38 +57,38 @@ clients:
 
 ## members
 our_member:
-  subtitle: OUR MEMBERS
-  title: The People Behind
-  content: We were freelance designers and developers, constantly finding </br> ourselves deep in vague feedback. This made every client and team
+  subtitle: OUR TEAM
+  title: Meet The Experts Behind Draxaa
+  content: Our diverse team of developers, designers, and project managers brings decades </br> of combined experience in delivering world-class software solutions
   list:
-    - name: Valentin Staykov
-      field: Operations
+    - name: Alex Morrison
+      field: Chief Technology Officer
       image: /images/about/team/01.jpg
-    - name: Bukiakta Bansalo
-      field: Product
+    - name: Sarah Chen
+      field: Lead Product Designer
       image: /images/about/team/02.jpg
-    - name: Ortrin Okaster
-      field: Engineering
+    - name: Michael Rodriguez
+      field: Senior Full-Stack Engineer
       image: /images/about/team/03.jpg
 
 ## office
 our_office:
-  subtitle: OUR OFFICES
-  title: Made With Love Of Around The </br> World With Many Offices
-  content: We were freelance designers and developers, constantly finding </br> ourselves deep in vague feedback. This made every client and team
+  subtitle: GLOBAL PRESENCE
+  title: Serving Clients Worldwide </br> From Strategic Locations
+  content: With teams across multiple continents, we provide 24/7 support and development </br> services to clients around the globe. Our distributed model ensures quality and efficiency.
   countries:
     - flag: /images/about/flags/us.png
-      name: NewYork, USA
-      location: 219 Bald Hill Drive Oakland Gardens, NY 11364
+      name: San Francisco, USA
+      location: 535 Mission Street, San Francisco, CA 94105
     - flag: /images/about/flags/au.png
-      name: Australia, Perth
-      location: Flat 23 80 Anthony Circlet Port Guiseppe, TAS 2691
+      name: Sydney, Australia
+      location: Level 12, 95 Pitt Street, Sydney NSW 2000
     - flag:  /images/about/flags/germany.png
       name: Berlin, Germany
-      location: Jl Raya Dewi Sartika Ged Harapan Masa, Br Germeny
+      location: Unter den Linden 14, 10117 Berlin, Germany
     - flag:  /images/about/flags/china.png
-      name: China, Wohan
-      location: 1hao Wen Ti Huo Dong Zhong Xin 1ceng Jian Xing
+      name: Singapore
+      location: 1 Raffles Place, Tower 2, Singapore 048616
 
 ---
 

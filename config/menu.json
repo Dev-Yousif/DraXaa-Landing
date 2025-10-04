@@ -5,6 +5,25 @@
       "url": "/"
     },
     {
+      "name": "Services",
+      "url": "",
+      "hasChildren": true,
+      "children": [
+        {
+          "name": "Web Development",
+          "url": "/#features"
+        },
+        {
+          "name": "Mobile Apps",
+          "url": "/#features"
+        },
+        {
+          "name": "Custom Software",
+          "url": "/#features"
+        }
+      ]
+    },
+    {
       "name": "About",
       "url": "/about"
     },
@@ -13,36 +32,29 @@
       "url": "/posts"
     },
     {
-      "name": "Pages",
-      "url": "",
-      "hasChildren": true,
-      "children": [
-        {
-          "name": "Elements",
-          "url": "/elements"
-        },
-        {
-          "name": "Terms & Conditions",
-          "url": "/terms-policy"
-        }
-      ]
-    },
-    {
       "name": "Contact",
       "url": "/contact"
     }
   ],
   "footer": [
     {
-      "name": "About",
+      "name": "About Us",
       "url": "/about"
     },
     {
-      "name": "Blog",
-      "url": "/blog"
+      "name": "Our Services",
+      "url": "/#features"
     },
     {
-      "name": "Terms & Conditions",
+      "name": "Blog & Insights",
+      "url": "/posts"
+    },
+    {
+      "name": "Contact",
+      "url": "/contact"
+    },
+    {
+      "name": "Privacy Policy",
       "url": "/terms-policy"
     }
   ]
