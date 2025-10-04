@@ -100,7 +100,7 @@ const RegularPages = async ({ params }) => {
 export default RegularPages;
 
 export async function generateStaticParams() {
-  const slugs = getSinglePage("content");
+  const slugs = await getSinglePage("content");
   const locales = ['en', 'ar'];
   const params = [];
 

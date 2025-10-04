@@ -27,9 +27,19 @@ const Article = async ({ params }) => {
 // get post single slug
 export async function generateStaticParams() {
   const allSlug = await getSinglePage(`content/${blog_folder}`);
-  return allSlug.map((item) => ({
-    single: item.slug,
-  }));
+  const locales = ['en', 'ar'];
+  const paths = [];
+
+  for (const locale of locales) {
+    for (const item of allSlug) {
+      paths.push({
+        locale: locale,
+        single: item.slug,
+      });
+    }
+  }
+
+  return paths;
 }
 
 export default Article;
