@@ -28,7 +28,7 @@ const RegularPages = async ({ params }) => {
           subtitle: t('aboutSubtitle'),
           title: t('aboutTitle'),
           content: t('aboutContent'),
-          image: pageData.frontmatter.about_us.image
+          image: pageData.frontmatter.about_us?.image || ''
         },
         works: {
           subtitle: t('expertiseSubtitle'),
@@ -44,31 +44,31 @@ const RegularPages = async ({ params }) => {
           subtitle: t('missionSubtitle'),
           title: t('missionTitle'),
           content: t('missionContent'),
-          image: pageData.frontmatter.mission.image
+          image: pageData.frontmatter.mission?.image || ''
         },
         video: {
           subtitle: t('videoSubtitle'),
           title: t('videoTitle'),
           description: t('videoDescription'),
-          video_id: pageData.frontmatter.video.video_id,
-          thumbnail: pageData.frontmatter.video.thumbnail
+          video_id: pageData.frontmatter.video?.video_id || '',
+          thumbnail: pageData.frontmatter.video?.thumbnail || ''
         },
         clients: {
           subtitle: t('clientsSubtitle'),
           title: t('clientsTitle'),
-          brands: pageData.frontmatter.clients.brands
+          brands: pageData.frontmatter.clients?.brands || []
         },
         our_member: {
           subtitle: t('teamSubtitle'),
           title: t('teamTitle'),
           content: t('teamDescription'),
-          list: pageData.frontmatter.our_member.list
+          list: pageData.frontmatter.our_member?.list || []
         },
         our_office: {
           subtitle: t('officesSubtitle'),
           title: t('officesTitle'),
           content: t('officesDescription'),
-          countries: pageData.frontmatter.our_office.countries
+          countries: pageData.frontmatter.our_office?.countries || []
         }
       }
     };

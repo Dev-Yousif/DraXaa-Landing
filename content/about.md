@@ -3,14 +3,12 @@ title: "About"
 layout: about
 draft: false
 
-## about us
 about_us:
   subtitle: WHO WE ARE
   title: We're Draxaa - Your Trusted Technology Partner
   content: Draxaa is a full-service software development company specializing in web design, mobile app development, and custom enterprise solutions. With a team of experienced developers, designers, and strategists, we transform innovative ideas into powerful digital products that drive business growth. Our mission is to empower businesses of all sizes with cutting-edge technology solutions that are scalable, secure, and built to last.
   image: /images/about/01.jpg
 
-## our works
 works:
   subtitle: OUR EXPERTISE
   title: What We Do Best
@@ -24,14 +22,12 @@ works:
     - title: Custom Software Solutions
       content: Enterprise software, SaaS platforms, and API integrations tailored to your specific business needs. We architect scalable solutions with clean code, comprehensive documentation, and ongoing support to ensure long-term success.
 
-## our mission
 mission:
   subtitle: OUR MISSION
   title: Empowering Businesses Through Technology Innovation
   content: At Draxaa, our mission is to bridge the gap between business challenges and technological solutions. We believe in transparent communication, agile methodologies, and delivering exceptional results that exceed expectations. Every project we undertake is an opportunity to create lasting value for our clients and their customers.
   image: /images/about/02.jpg
 
-## short video
 video:
   subtitle: SEE OUR PROCESS
   title: We Handle The Technical Complexity, You Focus On Growing Your Business
@@ -39,7 +35,6 @@ video:
   video_id: dyZcRRWiuuw
   thumbnail: /images/about/video-popup-2.jpg
 
-## clients
 clients:
   subtitle: OUR CLIENTS
   title: Trusted By Leading Companies Worldwide
@@ -54,8 +49,6 @@ clients:
     - /images/brands/05-colored.png
     - /images/brands/06-colored.png
 
-
-## members
 our_member:
   subtitle: OUR TEAM
   title: Meet The Experts Behind Draxaa
@@ -71,7 +64,6 @@ our_member:
       field: Senior Full-Stack Engineer
       image: /images/about/team/03.jpg
 
-## office
 our_office:
   subtitle: GLOBAL PRESENCE
   title: Serving Clients Worldwide </br> From Strategic Locations
