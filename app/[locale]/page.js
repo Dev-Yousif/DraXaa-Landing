@@ -7,10 +7,14 @@ import ShortIntro from "@layouts/partials/ShortIntro";
 import SpecialFeatures from "@layouts/partials/SpecialFeatures";
 import Testimonial from "@layouts/partials/Testimonial";
 import { getListPage } from "@lib/contentParser";
-import { useTranslations } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-const Home = async () => {
+const Home = async ({ params }) => {
+  const { locale } = await params;
+
+  // Enable static rendering
+  setRequestLocale(locale);
+
   const homepage = await getListPage("content/_index.md");
   const { frontmatter } = homepage;
   const { brands } = frontmatter;

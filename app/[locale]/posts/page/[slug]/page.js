@@ -6,14 +6,19 @@ import GSAPWrapper from "@layouts/components/GSAPWrapper";
 import SeoMeta from "@layouts/partials/SeoMeta";
 import { getListPage, getSinglePage } from "@lib/contentParser";
 import Post from "@partials/Post";
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 const { blog_folder } = config.settings;
 
 // blog pagination
 const BlogPagination = async ({ params }) => {
+  const { slug, locale } = await params;
+
+  // Enable static rendering
+  setRequestLocale(locale);
+
   const t = await getTranslations('BlogPage');
 
-  const currentPage = parseInt((params && params.slug) || 1);
+  const currentPage = parseInt(slug || 1);
   const { pagination } = config.settings;
   const posts = await getSinglePage(`content/${blog_folder}`);
   const postIndex = await getListPage(`content/${blog_folder}/_index.md`);

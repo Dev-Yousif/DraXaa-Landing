@@ -3,11 +3,15 @@ import GSAPWrapper from "@layouts/components/GSAPWrapper";
 import PostSingle from "@layouts/PostSingle";
 import { getSinglePage } from "@lib/contentParser";
 import { sortByDate } from "@lib/utils/sortFunctions";
+import { setRequestLocale } from 'next-intl/server';
 const { blog_folder } = config.settings;
 
 // post single layout
 const Article = async ({ params }) => {
-  const { single } = params;
+  const { single, locale } = await params;
+
+  // Enable static rendering
+  setRequestLocale(locale);
   const posts = await getSinglePage(`content/${blog_folder}`);
   const post = posts.filter((p) => p.slug == single);
   const recentPosts = sortByDate(posts).filter((post) => post.slug !== single);
