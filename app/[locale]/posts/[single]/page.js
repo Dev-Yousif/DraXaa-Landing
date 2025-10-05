@@ -9,9 +9,10 @@ import { notFound } from 'next/navigation';
 
 const { blog_folder } = config.settings;
 
-// Use dynamic rendering instead of static generation
+// Use dynamic rendering - skip static generation
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
+export const revalidate = 0;
 
 // post single layout
 const Article = async ({ params }) => {
@@ -20,43 +21,51 @@ const Article = async ({ params }) => {
   // Enable static rendering
   setRequestLocale(locale);
 
-  // Fetch post from database
-  const dbPost = await prisma.post.findFirst({
-    where: {
-      slug: single,
-      published: true
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-          email: true,
+  // Fetch post from database with error handling
+  let dbPost = null;
+  let recentDbPosts = [];
+
+  try {
+    dbPost = await prisma.post.findFirst({
+      where: {
+        slug: single,
+        published: true
+      },
+      include: {
+        author: {
+          select: {
+            name: true,
+            email: true,
+          }
         }
       }
-    }
-  });
+    });
 
-  if (!dbPost) {
+    if (!dbPost) {
+      notFound();
+    }
+
+    // Fetch recent posts
+    recentDbPosts = await prisma.post.findMany({
+      where: {
+        published: true,
+        NOT: { slug: single }
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: 2,
+      include: {
+        author: {
+          select: {
+            name: true,
+            email: true,
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Database connection error:', error);
     notFound();
   }
-
-  // Fetch recent posts
-  const recentDbPosts = await prisma.post.findMany({
-    where: {
-      published: true,
-      NOT: { slug: single }
-    },
-    orderBy: { publishedAt: 'desc' },
-    take: 2,
-    include: {
-      author: {
-        select: {
-          name: true,
-          email: true,
-        }
-      }
-    }
-  });
 
   // Transform to existing structure
   const frontmatter = {

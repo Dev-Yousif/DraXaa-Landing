@@ -11,9 +11,10 @@ import { prisma } from "@/lib/prisma";
 
 const { blog_folder } = config.settings;
 
-// Use dynamic rendering
+// Use dynamic rendering - skip static generation
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
+export const revalidate = 0;
 
 // blog pagination
 const BlogPagination = async ({ params }) => {
@@ -27,22 +28,30 @@ const BlogPagination = async ({ params }) => {
   const currentPage = parseInt(slug || 1);
   const { pagination } = config.settings;
 
-  // Fetch published posts from database
-  const totalPosts = await prisma.post.count({ where: { published: true } });
-  const dbPosts = await prisma.post.findMany({
-    where: { published: true },
-    orderBy: { publishedAt: 'desc' },
-    skip: (currentPage - 1) * pagination,
-    take: pagination,
-    include: {
-      author: {
-        select: {
-          name: true,
-          email: true,
+  // Fetch published posts from database with error handling
+  let totalPosts = 0;
+  let dbPosts = [];
+
+  try {
+    totalPosts = await prisma.post.count({ where: { published: true } });
+    dbPosts = await prisma.post.findMany({
+      where: { published: true },
+      orderBy: { publishedAt: 'desc' },
+      skip: (currentPage - 1) * pagination,
+      take: pagination,
+      include: {
+        author: {
+          select: {
+            name: true,
+            email: true,
+          }
         }
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error('Database connection error:', error);
+    // Return empty posts if database is not available
+  }
 
   // Transform database posts to match existing structure
   const transformedPosts = dbPosts.map(post => ({
