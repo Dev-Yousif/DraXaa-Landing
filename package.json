@@ -8,9 +8,18 @@
     "build": "next build",
     "export": "next build && next export",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.3",
+    "bcryptjs": "^3.0.2",
     "disqus-react": "^1.1.5",
     "feather-icons-react": "^0.7.0",
     "github-slugger": "^2.0.0",
@@ -18,8 +27,10 @@
     "gsap": "^3.12.5",
     "marked": "^14.1.0",
     "next": "^14.2.7",
+    "next-auth": "^4.24.11",
     "next-intl": "^4.3.9",
     "next-mdx-remote": "^5.0.0",
+    "prisma": "^6.16.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-gtm-module": "^2.0.11",
@@ -36,6 +47,7 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.8",
     "@tailwindcss/typography": "^0.5.15",
+    "@types/bcryptjs": "^2.4.6",
     "autoprefixer": "^10.4.20",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",

@@ -7,7 +7,13 @@ import SeoMeta from "@layouts/partials/SeoMeta";
 import { getListPage, getSinglePage } from "@lib/contentParser";
 import Post from "@partials/Post";
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { prisma } from "@/lib/prisma";
+
 const { blog_folder } = config.settings;
+
+// Use dynamic rendering
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
 
 // blog pagination
 const BlogPagination = async ({ params }) => {
@@ -20,13 +26,45 @@ const BlogPagination = async ({ params }) => {
 
   const currentPage = parseInt(slug || 1);
   const { pagination } = config.settings;
-  const posts = await getSinglePage(`content/${blog_folder}`);
-  const postIndex = await getListPage(`content/${blog_folder}/_index.md`);
-  //
+
+  // Fetch published posts from database
+  const totalPosts = await prisma.post.count({ where: { published: true } });
+  const dbPosts = await prisma.post.findMany({
+    where: { published: true },
+    orderBy: { publishedAt: 'desc' },
+    skip: (currentPage - 1) * pagination,
+    take: pagination,
+    include: {
+      author: {
+        select: {
+          name: true,
+          email: true,
+        }
+      }
+    }
+  });
+
+  // Transform database posts to match existing structure
+  const transformedPosts = dbPosts.map(post => ({
+    slug: post.slug,
+    frontmatter: {
+      title: post.title,
+      image: post.image,
+      date: post.publishedAt,
+      draft: false,
+      author: {
+        name: post.authorName,
+        avatar: post.authorAvatar
+      }
+    },
+    content: post.content,
+    excerpt: post.excerpt
+  }));
+
   const indexOfLastPost = currentPage * pagination;
   const indexOfFirstPost = indexOfLastPost - pagination;
-  const totalPages = Math.ceil(posts.length / pagination);
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(totalPosts / pagination);
+  const currentPosts = transformedPosts;
 
   const title = t('title');
 
@@ -61,23 +99,3 @@ const BlogPagination = async ({ params }) => {
 };
 
 export default BlogPagination;
-
-export async function generateStaticParams() {
-  const getAllSlug = await getSinglePage(`content/${blog_folder}`);
-  const allSlug = getAllSlug.map((item) => item.slug);
-  const { pagination } = config.settings;
-  const totalPages = Math.ceil(allSlug.length / pagination);
-  const locales = ['en', 'ar'];
-  let paths = [];
-
-  for (const locale of locales) {
-    for (let i = 1; i < totalPages; i++) {
-      paths.push({
-        locale: locale,
-        slug: (i + 1).toString(),
-      });
-    }
-  }
-
-  return paths;
-}

@@ -10,9 +10,14 @@ import { useTranslations } from 'next-intl';
 const Post = ({ post, i }) => {
   const t = useTranslations('BlogPage');
   const { summary_length, blog_folder } = config.settings;
+
+  // Validate image URL - must start with / or http
+  const isValidImage = post.frontmatter.image &&
+    (post.frontmatter.image.startsWith('/') || post.frontmatter.image.startsWith('http'));
+
   return (
     <div className="overflow-hidden rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,.05)]">
-      {post.frontmatter.image && (
+      {isValidImage && (
         <Link href={`/${blog_folder}/${post.slug}`}>
           <ImageFallback
             className="w-full object-cover"
@@ -35,23 +40,10 @@ const Post = ({ post, i }) => {
         <p className="mt-4">
           {post.content.slice(0, Number(summary_length))}...
         </p>
-        <div className="mt-6 flex items-center">
-          <div className="overflow-hidden rounded-full border-2 border-white shadow-[0_0_0_2px] shadow-primary">
-            <ImageFallback
-              src={post.frontmatter.author.avatar}
-              width={50}
-              height={50}
-              alt="author"
-            />
-          </div>
-          <div className="pl-5">
-            <p className="font-medium text-dark">
-              {post.frontmatter.author.name}
-            </p>
-            <p>
-              {dateFormat(post.frontmatter.date)} - {readingTime(post.content)}
-            </p>
-          </div>
+        <div className="mt-6">
+          <p className="text-gray-600">
+            {dateFormat(post.frontmatter.date)} - {readingTime(post.content)}
+          </p>
         </div>
       </div>
     </div>

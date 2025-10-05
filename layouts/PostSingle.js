@@ -15,6 +15,9 @@ const PostSingle = ({ frontmatter, content, recentPosts }) => {
   description = description ? description : content.slice(0, 120);
   const { disqus } = config;
 
+  // Validate image URL - must start with / or http
+  const isValidImage = image && (image.startsWith('/') || image.startsWith('http'));
+
   return (
     <>
       <SeoMeta title={title} description={description} image={image} />
@@ -23,7 +26,7 @@ const PostSingle = ({ frontmatter, content, recentPosts }) => {
           <article>
             <div className="row justify-center">
               <div className="lg:col-10">
-                {image && (
+                {isValidImage && (
                   <Image
                     src={image}
                     height="700"
@@ -36,21 +39,10 @@ const PostSingle = ({ frontmatter, content, recentPosts }) => {
               </div>
               <div className="lg:col-8">
                 {markdownify(title, "h1", "h2 mt-6")}
-                <div className="mt-6 flex items-center">
-                  <div className="overflow-hidden rounded-full border-2 border-white shadow-[0_0_0_2px] shadow-primary">
-                    <ImageFallback
-                      src={author.avatar}
-                      width={50}
-                      height={50}
-                      alt="author"
-                    />
-                  </div>
-                  <div className="pl-5">
-                    <p className="font-medium text-dark">{author.name}</p>
-                    <p>
-                      {dateFormat(date)} - {readingTime(content)}
-                    </p>
-                  </div>
+                <div className="mt-6">
+                  <p className="text-gray-600">
+                    {dateFormat(date)} - {readingTime(content)}
+                  </p>
                 </div>
                 <div className="content mb-16 mt-16 text-left">
                   <MDXContent content={content} />
