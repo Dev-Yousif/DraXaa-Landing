@@ -70,8 +70,15 @@ export default function LoginPage() {
         <div className="rounded-2xl bg-white p-8 shadow-xl">
           {/* Header */}
           <div className="mb-8 text-center">
+            <div className="flex justify-center mb-6">
+              <img
+                src="/images/logo.svg"
+                alt="Logo"
+                className="h-16 w-auto"
+              />
+            </div>
             <h1 className="mb-2 text-3xl font-bold text-gray-900">
-              Admin Login
+              Welcome Back
             </h1>
             <p className="text-gray-600">
               Sign in to access your dashboard
