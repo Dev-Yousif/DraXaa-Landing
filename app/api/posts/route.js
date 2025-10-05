@@ -55,6 +55,10 @@ export async function POST(request) {
       image,
       published,
       featured,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      ogImage,
     } = body;
 
     if (!title || !slug || !content) {
@@ -99,6 +103,10 @@ export async function POST(request) {
         image: image || "/images/blog/default.jpg",
         published: published || false,
         featured: featured || false,
+        metaTitle: metaTitle || null,
+        metaDescription: metaDescription || null,
+        metaKeywords: metaKeywords || null,
+        ogImage: ogImage || null,
         authorId: session.user.id,
         authorName: session.user.name || session.user.email,
         authorAvatar: "/images/author/default.jpg",

@@ -54,6 +54,10 @@ export async function PUT(request, { params }) {
       image,
       published,
       featured,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      ogImage,
     } = body;
 
     // Check if post exists
@@ -95,6 +99,10 @@ export async function PUT(request, { params }) {
     if (excerpt !== undefined) updateData.excerpt = excerpt;
     if (image !== undefined) updateData.image = image;
     if (featured !== undefined) updateData.featured = featured;
+    if (metaTitle !== undefined) updateData.metaTitle = metaTitle || null;
+    if (metaDescription !== undefined) updateData.metaDescription = metaDescription || null;
+    if (metaKeywords !== undefined) updateData.metaKeywords = metaKeywords || null;
+    if (ogImage !== undefined) updateData.ogImage = ogImage || null;
 
     if (published !== undefined) {
       updateData.published = published;

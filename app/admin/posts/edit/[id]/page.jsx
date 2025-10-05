@@ -17,6 +17,10 @@ export default function EditPostPage() {
     image: "",
     published: false,
     featured: false,
+    metaTitle: "",
+    metaDescription: "",
+    metaKeywords: "",
+    ogImage: "",
   });
 
   useEffect(() => {
@@ -38,6 +42,10 @@ export default function EditPostPage() {
           image: post.image || "",
           published: post.published,
           featured: post.featured,
+          metaTitle: post.metaTitle || "",
+          metaDescription: post.metaDescription || "",
+          metaKeywords: post.metaKeywords || "",
+          ogImage: post.ogImage || "",
         });
       } else {
         alert("Post not found");
@@ -260,6 +268,102 @@ export default function EditPostPage() {
                     Featured
                   </label>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SEO Meta Section */}
+          <div className="rounded-xl bg-white p-6 shadow-sm border border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO Meta Tags</h2>
+            <div className="space-y-6">
+              {/* Meta Title */}
+              <div>
+                <label
+                  htmlFor="metaTitle"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Meta Title
+                </label>
+                <input
+                  type="text"
+                  id="metaTitle"
+                  name="metaTitle"
+                  value={formData.metaTitle}
+                  onChange={handleChange}
+                  maxLength={60}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-20"
+                  placeholder="SEO title (defaults to post title)"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Recommended: 50-60 characters ({formData.metaTitle.length}/60)
+                </p>
+              </div>
+
+              {/* Meta Description */}
+              <div>
+                <label
+                  htmlFor="metaDescription"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Meta Description
+                </label>
+                <textarea
+                  id="metaDescription"
+                  name="metaDescription"
+                  rows={3}
+                  value={formData.metaDescription}
+                  onChange={handleChange}
+                  maxLength={160}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-20"
+                  placeholder="Brief description for search engines (defaults to excerpt)"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Recommended: 150-160 characters ({formData.metaDescription.length}/160)
+                </p>
+              </div>
+
+              {/* Meta Keywords */}
+              <div>
+                <label
+                  htmlFor="metaKeywords"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Meta Keywords
+                </label>
+                <input
+                  type="text"
+                  id="metaKeywords"
+                  name="metaKeywords"
+                  value={formData.metaKeywords}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-20"
+                  placeholder="keyword1, keyword2, keyword3"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Comma-separated keywords
+                </p>
+              </div>
+
+              {/* OG Image */}
+              <div>
+                <label
+                  htmlFor="ogImage"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Open Graph Image
+                </label>
+                <input
+                  type="text"
+                  id="ogImage"
+                  name="ogImage"
+                  value={formData.ogImage}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-20"
+                  placeholder="/images/og/my-post.jpg (defaults to featured image)"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Image for social media sharing (recommended: 1200x630px)
+                </p>
               </div>
             </div>
           </div>
