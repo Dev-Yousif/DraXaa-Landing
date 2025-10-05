@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { sendLeadNotification } from "@/lib/email";
 
 // GET all leads (protected - admin only)
 export async function GET(request) {
@@ -65,6 +66,12 @@ export async function POST(request) {
         message: message.trim(),
         status: "new",
       },
+    });
+
+    // Send email notification (non-blocking)
+    sendLeadNotification(lead).catch((error) => {
+      console.error("Failed to send email notification:", error);
+      // Don't fail the request if email fails
     });
 
     return NextResponse.json(
