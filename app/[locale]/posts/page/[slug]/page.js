@@ -25,8 +25,11 @@ const BlogPagination = async ({ params }) => {
 
   const t = await getTranslations('BlogPage');
 
-  const currentPage = parseInt(slug || 1);
+  // Handle undefined slug (first page)
+  const currentPage = slug ? parseInt(slug) : 1;
   const { pagination } = config.settings;
+
+  console.log('[Blog Pagination] Current page:', currentPage, 'Slug:', slug);
 
   // Fetch published posts from database with error handling
   let totalPosts = 0;

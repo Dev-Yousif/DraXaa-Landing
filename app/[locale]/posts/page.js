@@ -1,4 +1,2 @@
-import BlogPagination, { generateStaticParams } from "./page/[slug]/page";
-
-export { generateStaticParams };
-export default BlogPagination;
+// Main posts page - shows page 1
+export { default } from "./page/1/page";
