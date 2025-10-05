@@ -7,6 +7,9 @@ import DashboardLayout from "@/layouts/components/DashboardLayout";
 export default function CreatePostPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [showAiModal, setShowAiModal] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -35,6 +38,52 @@ export default function CreatePostPage() {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
       setFormData((prev) => ({ ...prev, slug }));
+    }
+  };
+
+  const generateWithAI = async () => {
+    if (!aiTopic.trim()) {
+      alert("Please enter a topic for the blog post");
+      return;
+    }
+
+    setAiGenerating(true);
+
+    try {
+      const res = await fetch("/api/generate-blog", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: aiTopic }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setFormData((prev) => ({
+          ...prev,
+          title: data.title || "",
+          content: data.content || "",
+          excerpt: data.excerpt || "",
+          image: data.image || "",
+          metaTitle: data.metaTitle || "",
+          metaDescription: data.metaDescription || "",
+          metaKeywords: data.metaKeywords || "",
+          ogImage: data.ogImage || data.image || "",
+          slug: (data.title || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, ""),
+        }));
+        setShowAiModal(false);
+        setAiTopic("");
+      } else {
+        const error = await res.json();
+        alert(error.error || "Failed to generate blog post");
+      }
+    } catch (error) {
+      console.error("Error generating blog:", error);
+      alert("Error generating blog post with AI");
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -74,30 +123,95 @@ export default function CreatePostPage() {
   return (
     <DashboardLayout>
       <div className="max-w-4xl">
+        {/* AI Generate Modal */}
+        {showAiModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Generate Blog Post with AI</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Enter a topic and our AI will generate a professional blog post for your software company
+              </p>
+              <input
+                type="text"
+                value={aiTopic}
+                onChange={(e) => setAiTopic(e.target.value)}
+                placeholder="e.g., Benefits of Cloud Computing for Businesses"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 mb-4 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-20"
+                onKeyPress={(e) => e.key === 'Enter' && generateWithAI()}
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowAiModal(false);
+                    setAiTopic("");
+                  }}
+                  disabled={aiGenerating}
+                  className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={generateWithAI}
+                  disabled={aiGenerating}
+                  className="flex-1 rounded-lg bg-gradient-to-r from-primary to-purple-600 px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {aiGenerating ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                      </svg>
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      Generate
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-4 mb-2">
-            <button
-              onClick={() => router.back()}
-              className="text-gray-600 hover:text-gray-900"
-            >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => router.back()}
+                className="text-gray-600 hover:text-gray-900"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Create New Post
+              </h1>
+            </div>
+            <button
+              onClick={() => setShowAiModal(true)}
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary to-purple-600 px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
+              Generate with AI
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Create New Post
-            </h1>
           </div>
           <p className="text-sm text-gray-600 ml-9">
             Write and publish a new blog post
