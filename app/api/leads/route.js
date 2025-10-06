@@ -38,12 +38,8 @@ export async function GET(request) {
 // POST create new lead (public - from contact form)
 export async function POST(request) {
   try {
-    console.log("📝 Received contact form submission");
-
     const body = await request.json();
     const { name, email, phone, subject, message } = body;
-
-    console.log("Form data:", { name, email, phone: phone || "N/A", subject: subject || "N/A" });
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -72,20 +68,10 @@ export async function POST(request) {
       },
     });
 
-    console.log("📧 Lead created, attempting to send email notification...");
-
-    // Send email notification and wait for result
-    try {
-      const emailResult = await sendLeadNotification(lead);
-      console.log("Email send result:", emailResult);
-
-      if (!emailResult.success) {
-        console.error("⚠️ Email failed but continuing:", emailResult.error);
-      }
-    } catch (error) {
-      console.error("❌ Email notification error:", error);
-      // Don't fail the request if email fails, but log it properly
-    }
+    // Send email notification
+    await sendLeadNotification(lead).catch((error) => {
+      console.error("Failed to send email notification:", error);
+    });
 
     return NextResponse.json(
       { success: true, message: "Thank you! We'll get back to you soon.", lead },
