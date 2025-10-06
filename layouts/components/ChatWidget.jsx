@@ -83,33 +83,28 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
       {/* Chat Window */}
-      {isOpen && (
-        <div className="mb-4 w-[380px] h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+      <div
+        className={`w-[380px] h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right ${
+          isOpen
+            ? "opacity-100 scale-100 translate-y-0"
+            : "opacity-0 scale-75 translate-y-4 pointer-events-none"
+        }`}
+      >
           {/* Header */}
           <div className="bg-gradient-to-r from-primary to-primary/90 p-4 text-white">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-bold">
-                    L
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-bold">
+                  D
                 </div>
-                <div>
-                  <h3 className="font-semibold text-base">Chat with us now</h3>
-                  <p className="text-xs text-white/80">We typically reply instantly</p>
-                </div>
+                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-white/80 hover:text-white transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+              <div>
+                <h3 className="font-semibold text-base text-white">Draxa AI</h3>
+                <p className="text-xs text-white/80">We typically reply instantly</p>
+              </div>
             </div>
           </div>
 
@@ -157,7 +152,7 @@ export default function ChatWidget() {
 
           {/* Input Area */}
           <div className="p-4 bg-white border-t border-gray-200">
-            <div className="flex gap-2 items-end">
+            <div className="flex gap-2 items-center">
               <div className="flex-1 relative">
                 <textarea
                   value={inputMessage}
@@ -176,7 +171,7 @@ export default function ChatWidget() {
                 className="bg-primary text-white p-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-5 h-5 rotate-90"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -192,29 +187,32 @@ export default function ChatWidget() {
             </div>
           </div>
         </div>
-      )}
 
       {/* Floating Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="group bg-gradient-to-r from-primary to-primary/90 text-white rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-110 flex items-center gap-3 px-5 py-3"
-      >
-        {!isOpen ? (
-          <>
-            <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg font-bold">
-                L
-              </div>
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
-            </div>
-            <span className="font-semibold">Layla Here</span>
-          </>
-        ) : (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+      <div className="flex items-center gap-3">
+        {!isOpen && (
+          <div className="bg-white rounded-lg shadow-lg px-4 py-2 animate-in slide-in-from-right-4">
+            <p className="text-sm text-gray-800 font-medium whitespace-nowrap">مرحبا لك</p>
+            <p className="text-xs text-gray-600">Layla Here</p>
+          </div>
         )}
-      </button>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="group bg-primary hover:bg-primary/90 text-white rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 hover:scale-110 w-14 h-14 flex items-center justify-center"
+        >
+          <svg
+            className={`w-6 h-6 transition-all duration-300 ${isOpen ? 'rotate-180 scale-90' : 'rotate-0 scale-100'}`}
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            {!isOpen ? (
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z M7 9h10v2H7zm0-3h10v2H7zm0 6h7v2H7z"/>
+            ) : (
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            )}
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
