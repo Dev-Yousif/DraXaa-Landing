@@ -28,29 +28,30 @@ const BlogPagination = async ({ params }) => {
   const currentPage = slug ? parseInt(slug) : 1;
   const { pagination } = config.settings;
 
-  // Fetch published posts from database with error handling
-  let totalPosts = 0;
+  // Fetch published posts from API
   let dbPosts = [];
+  let totalPosts = 0;
 
   try {
-    totalPosts = await prisma.post.count({ where: { published: true } });
-    dbPosts = await prisma.post.findMany({
-      where: { published: true },
-      orderBy: { publishedAt: 'desc' },
-      skip: (currentPage - 1) * pagination,
-      take: pagination,
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-          }
-        }
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/posts?published=true`, {
+      cache: 'no-store', // Always fetch fresh data
+      headers: {
+        'Content-Type': 'application/json',
       }
     });
+
+    if (response.ok) {
+      const allPosts = await response.json();
+      totalPosts = allPosts.length;
+
+      // Apply pagination
+      const startIndex = (currentPage - 1) * pagination;
+      const endIndex = startIndex + pagination;
+      dbPosts = allPosts.slice(startIndex, endIndex);
+    }
   } catch (error) {
-    console.error('Database connection error:', error);
-    // Return empty posts if database is not available
+    console.error('Failed to fetch posts from API:', error);
   }
 
   // Transform database posts to match existing structure
@@ -70,8 +71,6 @@ const BlogPagination = async ({ params }) => {
     excerpt: post.excerpt
   }));
 
-  const indexOfLastPost = currentPage * pagination;
-  const indexOfFirstPost = indexOfLastPost - pagination;
   const totalPages = Math.ceil(totalPosts / pagination);
   const currentPosts = transformedPosts;
 

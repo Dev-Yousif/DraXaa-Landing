@@ -20,49 +20,40 @@ const Article = async ({ params }) => {
   // Enable static rendering
   setRequestLocale(locale);
 
-  // Fetch post from database with error handling
+  // Fetch post from API
   let dbPost = null;
   let recentDbPosts = [];
 
   try {
-    dbPost = await prisma.post.findFirst({
-      where: {
-        slug: single,
-        published: true
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-          }
-        }
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+
+    // Fetch all published posts
+    const response = await fetch(`${baseUrl}/api/posts?published=true`, {
+      cache: 'no-store', // Always fetch fresh data
+      headers: {
+        'Content-Type': 'application/json',
       }
     });
 
-    if (!dbPost) {
+    if (response.ok) {
+      const allPosts = await response.json();
+
+      // Find the current post
+      dbPost = allPosts.find(post => post.slug === single);
+
+      if (!dbPost) {
+        notFound();
+      }
+
+      // Get recent posts (excluding current post)
+      recentDbPosts = allPosts
+        .filter(post => post.slug !== single)
+        .slice(0, 2);
+    } else {
       notFound();
     }
-
-    // Fetch recent posts
-    recentDbPosts = await prisma.post.findMany({
-      where: {
-        published: true,
-        NOT: { slug: single }
-      },
-      orderBy: { publishedAt: 'desc' },
-      take: 2,
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-          }
-        }
-      }
-    });
   } catch (error) {
-    console.error('Database connection error:', error);
+    console.error('Failed to fetch post from API:', error);
     notFound();
   }
 
