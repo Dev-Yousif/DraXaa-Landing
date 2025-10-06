@@ -31,7 +31,7 @@ const StatsCard = ({ title, value, icon, trend, trendValue, color = "blue" }) =>
   const colors = colorClasses[color];
 
   return (
-    <div className={`group relative overflow-hidden rounded-2xl bg-white p-6 shadow-lg ${colors.shadow} border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1`}>
+    <div className={`group relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md hover:scale-105 hover:-translate-y-1`}>
       {/* Gradient Background */}
       <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${colors.light} rounded-full -mr-16 -mt-16 opacity-50 group-hover:opacity-70 transition-opacity`}></div>
 
@@ -63,7 +63,7 @@ const StatsCard = ({ title, value, icon, trend, trendValue, color = "blue" }) =>
             </div>
           )}
         </div>
-        <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${colors.gradient} shadow-lg ${colors.shadow} transform transition-transform group-hover:scale-110 group-hover:rotate-6`}>
+        <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${colors.gradient} shadow-sm border border-gray-200 transform transition-transform group-hover:scale-110 group-hover:rotate-6`}>
           <div className="text-white">
             {icon}
           </div>

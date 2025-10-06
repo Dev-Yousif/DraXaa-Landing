@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const DashboardLayout = ({ children }) => {
@@ -131,23 +132,21 @@ const DashboardLayout = ({ children }) => {
           {/* Navigation */}
           <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
-                className={`group flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all duration-200 ${
+                className={`group flex items-center gap-3 rounded-xl px-4 font-medium transition-all duration-200 ${
                   isActive(item.href)
-                    ? "bg-gradient-to-r from-primary to-primary/90 text-white shadow-lg shadow-primary/30"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                    ? "bg-gradient-to-r from-primary to-primary/90 text-white py-2.5"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-primary py-3"
                 }`}
               >
                 <span className={isActive(item.href) ? "text-white" : "text-gray-400 group-hover:text-primary"}>
                   {item.icon}
                 </span>
                 <span>{item.name}</span>
-                {isActive(item.href) && (
-                  <span className="ml-auto h-2 w-2 rounded-full bg-white"></span>
-                )}
-              </a>
+               
+              </Link>
             ))}
           </nav>
 
