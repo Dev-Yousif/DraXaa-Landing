@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from '@/i18n/routing';
 import React from "react";
 import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
 
@@ -24,8 +26,8 @@ const Pagination = ({ section, currentPage, totalPages }) => {
             <Link
               href={
                 indexPageLink
-                  ? `${section ? "/" + section : "/"}`
-                  : `${section ? "/" + section : ""}/page/${currentPage - 1}`
+                  ? `/${section}`
+                  : `/${section}/page/${currentPage - 1}`
               }
               className="inline-flex h-11 w-11 items-center justify-center rounded px-2 py-2 text-primary hover:bg-primary hover:text-body"
             >
@@ -55,11 +57,9 @@ const Pagination = ({ section, currentPage, totalPages }) => {
                 <Link
                   href={
                     i === 0
-                      ? `${section ? "/" + section : "/"}`
-                      : `${section ? "/" + section : ""}/page/${pagination}`
+                      ? `/${section}`
+                      : `/${section}/page/${pagination}`
                   }
-                  passHref
-                  aria-current="page"
                   className={`inline-flex h-11 w-11 items-center justify-center rounded-md px-4 py-2 font-medium text-primary hover:bg-primary hover:text-body`}
                 >
                   {pagination}
@@ -71,7 +71,7 @@ const Pagination = ({ section, currentPage, totalPages }) => {
           {/* next page */}
           {hasNextPage ? (
             <Link
-              href={`${section ? "/" + section : ""}/page/${currentPage + 1}`}
+              href={`/${section}/page/${currentPage + 1}`}
               className="inline-flex h-11 w-11 items-center justify-center rounded px-2 py-2 text-primary hover:bg-primary hover:text-body"
             >
               <TfiAngleRight />

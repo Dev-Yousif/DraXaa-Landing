@@ -11,10 +11,9 @@ import { prisma } from "@/lib/prisma";
 
 const { blog_folder } = config.settings;
 
-// Use dynamic rendering - skip static generation
-export const dynamic = 'force-dynamic';
+// Use ISR - revalidate every 60 seconds for new posts
+export const revalidate = 60; // Revalidate every 60 seconds
 export const dynamicParams = true;
-export const revalidate = 0;
 
 // blog pagination
 const BlogPagination = async ({ params }) => {
@@ -28,8 +27,6 @@ const BlogPagination = async ({ params }) => {
   // Handle undefined slug (first page)
   const currentPage = slug ? parseInt(slug) : 1;
   const { pagination } = config.settings;
-
-  console.log('[Blog Pagination] Current page:', currentPage, 'Slug:', slug);
 
   // Fetch published posts from database with error handling
   let totalPosts = 0;
@@ -98,7 +95,7 @@ const BlogPagination = async ({ params }) => {
             ))}
           </div>
           <Pagination
-            section={blog_folder}
+            section="posts"
             totalPages={totalPages}
             currentPage={currentPage}
           />

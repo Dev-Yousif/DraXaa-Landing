@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from 'next/cache';
 
 // GET all posts
 export async function GET(request) {
@@ -94,21 +95,26 @@ export async function POST(request) {
       );
     }
 
+    // Ensure metaKeywords is properly formatted as string
+    const formattedMetaKeywords = metaKeywords
+      ? (Array.isArray(metaKeywords) ? metaKeywords.join(', ') : String(metaKeywords))
+      : null;
+
     const post = await prisma.post.create({
       data: {
-        title,
-        slug,
-        content,
-        excerpt: excerpt || content.substring(0, 160),
-        image: image || "/images/blog/default.jpg",
-        published: published || false,
-        featured: featured || false,
-        metaTitle: metaTitle || null,
-        metaDescription: metaDescription || null,
-        metaKeywords: metaKeywords || null,
-        ogImage: ogImage || null,
-        authorId: session.user.id,
-        authorName: session.user.name || session.user.email,
+        title: String(title),
+        slug: String(slug),
+        content: String(content),
+        excerpt: excerpt ? String(excerpt) : content.substring(0, 160),
+        image: image ? String(image) : "/images/blog/default.jpg",
+        published: Boolean(published),
+        featured: Boolean(featured),
+        metaTitle: metaTitle ? String(metaTitle) : null,
+        metaDescription: metaDescription ? String(metaDescription) : null,
+        metaKeywords: formattedMetaKeywords,
+        ogImage: ogImage ? String(ogImage) : null,
+        authorId: String(session.user.id),
+        authorName: session.user.name ? String(session.user.name) : String(session.user.email),
         authorAvatar: "/images/author/default.jpg",
         publishedAt: published ? new Date() : null,
       },
@@ -123,11 +129,22 @@ export async function POST(request) {
       },
     });
 
+    // Revalidate blog pages to show new post immediately
+    if (published) {
+      revalidatePath('/posts');
+      revalidatePath(`/posts/${slug}`);
+    }
+
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     console.error("Error creating post:", error);
+    console.error("Error details:", error.message);
+    console.error("Error stack:", error.stack);
     return NextResponse.json(
-      { error: "Failed to create post" },
+      {
+        error: "Failed to create post",
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }

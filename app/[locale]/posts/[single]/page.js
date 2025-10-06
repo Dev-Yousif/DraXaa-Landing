@@ -9,10 +9,9 @@ import { notFound } from 'next/navigation';
 
 const { blog_folder } = config.settings;
 
-// Use dynamic rendering - skip static generation
-export const dynamic = 'force-dynamic';
+// Use ISR - revalidate every 60 seconds for new posts
+export const revalidate = 60; // Revalidate every 60 seconds
 export const dynamicParams = true;
-export const revalidate = 0;
 
 // post single layout
 const Article = async ({ params }) => {
