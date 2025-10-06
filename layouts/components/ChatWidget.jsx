@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export default function ChatWidget() {
   const locale = useLocale();
@@ -94,7 +95,13 @@ export default function ChatWidget() {
   if (!isMounted) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50" dir="ltr">
+    <>
+      <style jsx>{`
+        .chat-messages::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+      <div className="fixed bottom-6 right-6 z-50" dir="ltr">
       {/* Chat Window */}
       <div
         className={`w-[380px] h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right mb-20 ${
@@ -120,11 +127,17 @@ export default function ChatWidget() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          <div
+            className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 chat-messages"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"} gap-2`}
               >
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
@@ -134,6 +147,7 @@ export default function ChatWidget() {
                   }`}
                 >
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+
                   <span
                     className={`text-xs mt-1 block ${
                       message.role === "user" ? "text-white/70" : "text-gray-400"
@@ -145,8 +159,138 @@ export default function ChatWidget() {
                     })}
                   </span>
                 </div>
+
+                {/* Show Contact Button outside message bubble if AI mentions contact/email */}
+                {message.role === "assistant" &&
+                 (message.content.includes("hello@draxaa.com") ||
+                  message.content.includes("contact") ||
+                  message.content.includes("/contact") ||
+                  message.content.includes("اتصل") ||
+                  message.content.includes("تواصل")) && (
+                  <Link
+                    href={`/${locale}/contact`}
+                    className="inline-flex items-center gap-2 px-4 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    {locale === 'ar' ? 'اتصل بنا' : 'Contact Us'}
+                  </Link>
+                )}
               </div>
             ))}
+
+            {/* Quick Questions - Show only if user hasn't sent any message yet */}
+            {messages.length === 1 && !isLoading && (
+              <div className="space-y-2">
+                <button
+                  onClick={async () => {
+                    const question = t('quickQuestion1');
+                    const userMessage = {
+                      role: "user",
+                      content: question,
+                      timestamp: new Date(),
+                    };
+                    setMessages((prev) => [...prev, userMessage]);
+                    setIsLoading(true);
+
+                    try {
+                      const response = await fetch("/api/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          message: question,
+                          locale: locale,
+                          history: messages.map((msg) => ({ role: msg.role, content: msg.content })),
+                        }),
+                      });
+
+                      if (!response.ok) throw new Error("Failed to get response");
+                      const data = await response.json();
+                      setMessages((prev) => [...prev, { role: "assistant", content: data.message, timestamp: new Date() }]);
+                    } catch (error) {
+                      setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I'm having trouble connecting right now. Please try again later.", timestamp: new Date() }]);
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  }}
+                  className="w-full text-left px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 transition-colors text-sm"
+                >
+                  {t('quickQuestion1')}
+                </button>
+                <button
+                  onClick={async () => {
+                    const question = t('quickQuestion2');
+                    const userMessage = {
+                      role: "user",
+                      content: question,
+                      timestamp: new Date(),
+                    };
+                    setMessages((prev) => [...prev, userMessage]);
+                    setIsLoading(true);
+
+                    try {
+                      const response = await fetch("/api/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          message: question,
+                          locale: locale,
+                          history: messages.map((msg) => ({ role: msg.role, content: msg.content })),
+                        }),
+                      });
+
+                      if (!response.ok) throw new Error("Failed to get response");
+                      const data = await response.json();
+                      setMessages((prev) => [...prev, { role: "assistant", content: data.message, timestamp: new Date() }]);
+                    } catch (error) {
+                      setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I'm having trouble connecting right now. Please try again later.", timestamp: new Date() }]);
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  }}
+                  className="w-full text-left px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 transition-colors text-sm"
+                >
+                  {t('quickQuestion2')}
+                </button>
+                <button
+                  onClick={async () => {
+                    const question = t('quickQuestion3');
+                    const userMessage = {
+                      role: "user",
+                      content: question,
+                      timestamp: new Date(),
+                    };
+                    setMessages((prev) => [...prev, userMessage]);
+                    setIsLoading(true);
+
+                    try {
+                      const response = await fetch("/api/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          message: question,
+                          locale: locale,
+                          history: messages.map((msg) => ({ role: msg.role, content: msg.content })),
+                        }),
+                      });
+
+                      if (!response.ok) throw new Error("Failed to get response");
+                      const data = await response.json();
+                      setMessages((prev) => [...prev, { role: "assistant", content: data.message, timestamp: new Date() }]);
+                    } catch (error) {
+                      setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I'm having trouble connecting right now. Please try again later.", timestamp: new Date() }]);
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  }}
+                  className="w-full text-left px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 transition-colors text-sm"
+                >
+                  {t('quickQuestion3')}
+                </button>
+              </div>
+            )}
+
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-white text-gray-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-gray-100">
@@ -229,5 +373,6 @@ export default function ChatWidget() {
         </button>
       </div>
     </div>
+    </>
   );
 }

@@ -105,23 +105,31 @@ export async function POST(req) {
       conversationContext = `User: ${message}`;
     }
 
-    const isArabic = locale === 'ar';
-    const languageInstruction = isArabic
-      ? 'IMPORTANT: Respond ONLY in Arabic language. All your responses must be in Arabic.'
-      : 'IMPORTANT: Respond ONLY in English language. All your responses must be in English.';
+    const languageInstruction = locale === 'ar'
+      ? 'IMPORTANT: Respond ONLY in Arabic language.'
+      : 'IMPORTANT: Respond ONLY in English language.';
 
-    const prompt = `You are Draxaa AI, an intelligent virtual assistant for Draxaa - a professional software development company. Your role is to help visitors learn about our services, answer questions, and guide them toward getting started with their projects.
+    const prompt = `You are Draxaa AI, a helpful virtual assistant for Draxaa - a professional software development company. Help visitors learn about our services and guide them toward their project goals.
 
 ${languageInstruction}
 
-IMPORTANT GUIDELINES:
-1. ONLY answer questions related to Draxaa's services, technology, pricing, process, and related business topics
-2. If asked about topics outside Draxaa's scope (like how to install software, general tutorials, unrelated topics), politely redirect them back to Draxaa services
-3. Be professional, friendly, and concise
-4. Always try to guide conversations toward how Draxaa can help solve their business problems
-5. If asked about pricing, mention it varies by project scope and suggest contacting hello@draxaa.com
-6. Promote our contact page at /contact for project inquiries
-7. Keep responses under 100 words unless specifically asked for details
+RESPONSE FORMAT:
+- Keep responses conversational and natural (2-3 sentences max)
+- NO markdown, NO bold, NO bullet points - plain text only
+- Be helpful and informative, not robotic
+- Answer questions with relevant details
+
+CONVERSATION APPROACH:
+- For service questions: Explain what we offer and how it solves their needs
+- For project ideas (like "I want to build X"): Acknowledge their idea specifically, explain how we can help, mention relevant experience, suggest next steps
+- For technical questions: Briefly explain our approach and tech stack
+- For pricing: Explain it depends on project scope and features, suggest contacting hello@draxaa.com for a custom quote
+- For off-topic questions: Politely redirect to Draxaa services
+
+GUIDELINES:
+1. ONLY discuss Draxaa services, technology, and business topics
+2. Be conversational and show understanding of their needs
+3. Give helpful answers before suggesting contact
 
 ${COMPANY_KNOWLEDGE}
 
@@ -131,15 +139,15 @@ ${conversationContext}
 Assistant:`;
 
     const result = await model.generateContent(prompt);
-    const response = await result.response;
+    const response = result.response;
     const text = response.text();
 
     return NextResponse.json({
       message: text,
-      success: true,
     });
   } catch (error) {
     console.error("Chat API Error:", error);
+    console.error("Error details:", error.message);
     return NextResponse.json(
       {
         error: "Failed to generate response",

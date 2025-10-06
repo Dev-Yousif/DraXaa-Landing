@@ -118,6 +118,9 @@
     "placeholder": "Type your message...",
     "greeting": "Hi there! 👋 I'm Draxaa AI, your assistant. How can I help you today?",
     "welcomeMessage": "Welcome",
-    "welcomeSubtitle": "Layla Here"
+    "welcomeSubtitle": "Layla Here",
+    "quickQuestion1": "What services do you offer?",
+    "quickQuestion2": "How much does a project cost?",
+    "quickQuestion3": "How can I get started?"
   }
 }
