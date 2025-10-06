@@ -73,7 +73,7 @@ Empowering businesses with cutting-edge web and mobile solutions. We transform i
 
 export async function POST(req) {
   try {
-    const { message, history } = await req.json();
+    const { message, history, locale } = await req.json();
 
     if (!message) {
       return NextResponse.json(
@@ -105,11 +105,18 @@ export async function POST(req) {
       conversationContext = `User: ${message}`;
     }
 
+    const isArabic = locale === 'ar';
+    const languageInstruction = isArabic
+      ? 'IMPORTANT: Respond ONLY in Arabic language. All your responses must be in Arabic.'
+      : 'IMPORTANT: Respond ONLY in English language. All your responses must be in English.';
+
     const prompt = `You are Draxaa AI, an intelligent virtual assistant for Draxaa - a professional software development company. Your role is to help visitors learn about our services, answer questions, and guide them toward getting started with their projects.
+
+${languageInstruction}
 
 IMPORTANT GUIDELINES:
 1. ONLY answer questions related to Draxaa's services, technology, pricing, process, and related business topics
-2. If asked about topics outside Draxaa's scope (like how to install software, general tutorials, unrelated topics), politely redirect: "I'm here specifically to help with Draxaa's services and answer questions about our company. For questions about [topic], I recommend checking relevant documentation or resources. How can I help you with your development project instead?"
+2. If asked about topics outside Draxaa's scope (like how to install software, general tutorials, unrelated topics), politely redirect them back to Draxaa services
 3. Be professional, friendly, and concise
 4. Always try to guide conversations toward how Draxaa can help solve their business problems
 5. If asked about pricing, mention it varies by project scope and suggest contacting hello@draxaa.com

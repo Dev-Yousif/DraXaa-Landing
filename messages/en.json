@@ -111,5 +111,13 @@
     "categories": "Categories",
     "recentPosts": "Recent Posts",
     "tags": "Tags"
+  },
+  "Chat": {
+    "header": "Draxaa AI",
+    "subtitle": "We typically reply instantly",
+    "placeholder": "Type your message...",
+    "greeting": "Hi there! 👋 I'm Draxaa AI, your assistant. How can I help you today?",
+    "welcomeMessage": "Welcome",
+    "welcomeSubtitle": "Layla Here"
   }
 }
