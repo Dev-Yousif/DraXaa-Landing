@@ -7,6 +7,7 @@ import theme from "@config/theme.json";
 import TwSizeIndicator from "@layouts/components/TwSizeIndicator";
 import Footer from "@layouts/partials/Footer";
 import Header from "@layouts/partials/Header";
+import ChatWidget from "@layouts/components/ChatWidget";
 import "../../styles/style.scss";
 
 export function generateStaticParams() {
@@ -74,6 +75,7 @@ export default async function LocaleLayout({ children, params }) {
           <Header />
           {children}
           <Footer />
+          <ChatWidget />
         </NextIntlClientProvider>
       </body>
     </html>
