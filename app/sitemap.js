@@ -1,6 +1,8 @@
-import { getSinglePage } from '@lib/contentParser';
+import { prisma } from '@/lib/prisma';
 
-export default function sitemap() {
+export const revalidate = 3600; // Revalidate sitemap every hour
+
+export default async function sitemap() {
   const baseUrl = 'https://www.draxaa.com';
 
   const routes = [
@@ -29,28 +31,44 @@ export default function sitemap() {
     { url: `${baseUrl}/ar/posts/page/1`, changeFrequency: 'daily', priority: 0.7 },
   ];
 
-  // Get dynamic blog posts from content folder
-  const posts = getSinglePage('content/posts');
-
-  // Add each blog post for both languages
-  posts.forEach(post => {
-    const lastModified = post.frontmatter.date ? new Date(post.frontmatter.date) : new Date();
-
-    routes.push(
-      {
-        url: `${baseUrl}/en/posts/${post.slug}`,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-        lastModified: lastModified
+  // Get dynamic blog posts from database
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        published: true,
       },
-      {
-        url: `${baseUrl}/ar/posts/${post.slug}`,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-        lastModified: lastModified
-      }
-    );
-  });
+      select: {
+        slug: true,
+        publishedAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+    });
+
+    // Add each blog post for both languages
+    posts.forEach(post => {
+      const lastModified = post.publishedAt || post.updatedAt || new Date();
+
+      routes.push(
+        {
+          url: `${baseUrl}/en/posts/${post.slug}`,
+          changeFrequency: 'monthly',
+          priority: 0.6,
+          lastModified: lastModified
+        },
+        {
+          url: `${baseUrl}/ar/posts/${post.slug}`,
+          changeFrequency: 'monthly',
+          priority: 0.6,
+          lastModified: lastModified
+        }
+      );
+    });
+  } catch (error) {
+    console.error('Error fetching posts for sitemap:', error);
+  }
 
   return routes.map(route => ({
     url: route.url,

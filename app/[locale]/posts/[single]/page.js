@@ -13,6 +13,77 @@ const { blog_folder } = config.settings;
 export const revalidate = 60; // Revalidate every 60 seconds
 export const dynamicParams = true;
 
+// Generate metadata for SEO
+export async function generateMetadata({ params }) {
+  const { single, locale } = await params;
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        slug: single,
+        published: true,
+      },
+      select: {
+        title: true,
+        excerpt: true,
+        image: true,
+        metaTitle: true,
+        metaDescription: true,
+        metaKeywords: true,
+        ogImage: true,
+        publishedAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!post) {
+      return {
+        title: 'Post Not Found',
+      };
+    }
+
+    const title = post.metaTitle || post.title;
+    const description = post.metaDescription || post.excerpt || post.title;
+    const ogImage = post.ogImage || post.image || '/images/og-image.png';
+    const keywords = post.metaKeywords || '';
+
+    return {
+      title: title,
+      description: description,
+      keywords: keywords,
+      authors: [{ name: 'Draxaa' }],
+      openGraph: {
+        title: title,
+        description: description,
+        images: [ogImage],
+        type: 'article',
+        publishedTime: post.publishedAt?.toISOString(),
+        modifiedTime: post.updatedAt?.toISOString(),
+        locale: locale,
+        alternateLocale: locale === 'en' ? 'ar' : 'en',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: title,
+        description: description,
+        images: [ogImage],
+      },
+      alternates: {
+        canonical: `https://www.draxaa.com/${locale}/posts/${single}`,
+        languages: {
+          'en': `https://www.draxaa.com/en/posts/${single}`,
+          'ar': `https://www.draxaa.com/ar/posts/${single}`,
+        },
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: 'Blog Post',
+    };
+  }
+}
+
 // post single layout
 const Article = async ({ params }) => {
   const { single, locale } = await params;
