@@ -9,6 +9,7 @@ export default function ChatWidget() {
   const t = useTranslations('Chat');
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -19,9 +20,86 @@ export default function ChatWidget() {
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const audioRef = useRef(null);
+  const [audioReady, setAudioReady] = useState(false);
+
+  // Enable audio on first user interaction
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const enableAudio = () => {
+      if (!audioReady) {
+        // Create and prime audio context
+        if (!audioRef.current) {
+          audioRef.current = new Audio('/sounds/notfication.wav');
+          audioRef.current.volume = 0.5;
+        }
+
+        // Try to play silently to unlock audio
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            setAudioReady(true);
+          }).catch(() => {
+            // Audio not ready yet, will try again
+          });
+        }
+      }
+    };
+
+    // Listen for any user interaction to enable audio
+    const events = ['click', 'touchstart', 'keydown', 'mousemove'];
+    events.forEach(event => {
+      document.addEventListener(event, enableAudio, { once: true, passive: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, enableAudio);
+      });
+    };
+  }, [audioReady]);
 
   useEffect(() => {
     setIsMounted(true);
+
+    // Preload audio
+    if (typeof window !== 'undefined' && !audioRef.current) {
+      audioRef.current = new Audio('/sounds/notfication.wav');
+      audioRef.current.volume = 0.5;
+      audioRef.current.load();
+    }
+
+    // Show welcome message after 10 seconds
+    const timer = setTimeout(() => {
+      setShowWelcome(true);
+
+      // Play notification sound
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        const playPromise = audioRef.current.play();
+
+        if (playPromise !== undefined) {
+          playPromise.catch(e => {
+            console.log('Audio play failed:', e);
+            // Fallback: try creating new audio instance
+            try {
+              const fallbackAudio = new Audio('/sounds/notfication.wav');
+              fallbackAudio.volume = 0.5;
+              fallbackAudio.play().catch(err => console.log('Fallback audio failed:', err));
+            } catch (err) {
+              console.log('Fallback audio initialization failed:', err);
+            }
+          });
+        }
+      }
+    }, 7000);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const scrollToBottom = () => {
@@ -101,10 +179,10 @@ export default function ChatWidget() {
           display: none;
         }
       `}</style>
-      <div className="fixed bottom-6 right-6 z-50" dir="ltr">
+      <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-full max-w-[calc(100vw-2rem)] md:max-w-none md:w-auto" dir="ltr">
       {/* Chat Window */}
       <div
-        className={`w-[380px] h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right mb-20 ${
+        className={`w-full md:w-[380px] h-[calc(100vh-8rem)] md:h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right mb-16 md:mb-20 ${
           isOpen
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-75 translate-y-4 pointer-events-none"
@@ -306,7 +384,7 @@ export default function ChatWidget() {
           </div>
 
           {/* Input Area */}
-          <div className="p-4 bg-white border-t border-gray-200">
+          <div className="p-3 md:p-4 bg-white border-t border-gray-200">
             <div className="flex gap-2 items-center">
               <div className="flex-1 relative">
                 <textarea
@@ -314,7 +392,7 @@ export default function ChatWidget() {
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder={t('placeholder')}
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none resize-none text-sm"
+                  className="w-full px-3 md:px-4 py-2 md:py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none resize-none text-sm"
                   rows="1"
                   style={{ maxHeight: "120px" }}
                   disabled={isLoading}
@@ -323,10 +401,10 @@ export default function ChatWidget() {
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || isLoading}
-                className="bg-primary text-white p-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-primary text-white p-2.5 md:p-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               >
                 <svg
-                  className="w-5 h-5 rotate-90"
+                  className="w-4 h-4 md:w-5 md:h-5 rotate-90"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -344,10 +422,10 @@ export default function ChatWidget() {
         </div>
 
       {/* Floating Button and Welcome Bubble */}
-      <div className="absolute bottom-0 right-0 flex items-center gap-3">
-        {!isOpen && (
+      <div className="absolute bottom-0 right-0 flex items-center gap-2 md:gap-3">
+        {!isOpen && showWelcome && (
           <div
-            className="bg-white rounded-lg shadow-lg px-4 py-2 animate-in slide-in-from-right-4"
+            className="hidden md:block bg-white rounded-lg shadow-lg px-4 py-2 animate-in slide-in-from-right-4"
             dir="ltr"
           >
             <p className="text-sm text-gray-800 font-medium whitespace-nowrap" dir="ltr">{t('welcomeMessage')}</p>
@@ -356,8 +434,16 @@ export default function ChatWidget() {
         )}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="group bg-primary hover:bg-primary/90 text-white rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 hover:scale-110 w-14 h-14 flex items-center justify-center flex-shrink-0"
+          className="group bg-primary hover:bg-primary/90 text-white rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 hover:scale-110 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center flex-shrink-0 relative"
         >
+          {/* Green notification dot */}
+          {showWelcome && !isOpen && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
+            </span>
+          )}
+
           <svg
             className="w-6 h-6 transition-all duration-300"
             fill="currentColor"
